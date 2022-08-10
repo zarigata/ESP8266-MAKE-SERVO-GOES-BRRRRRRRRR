@@ -7,8 +7,10 @@
 #include "PageIndex.h"; //--> Include the contents of the User Interface Web page, stored in the same folder as the .ino file
 #define LEDonBoard 2  //--> Defining an On Board LED, used for indicators when the process of connecting to a wifi router
 #define ServoPort 16   //--> Defining Servo Port
-#define backport 5
-#define sidechanger 4
+#define leftMotor 5 
+#define rightMotor 4
+#define leftMotorENB  0
+#define rightMotorENB 2
 //==========================================//
 const char *ssid = "APOLLO";
 const char *password = "0978653421";
@@ -35,15 +37,18 @@ void handleServo() {
   server.send(200, "text/plane", "");
 }
 // MOTORES TESTE AuFs 1
-void handleMotorbackwards()  
-{
-  String back = server.arg("backwards");
-  int motorbackwards = back.toInt();
-  digitalWrite(backport,HIGH);
-  digitalWrite(sidechanger,HIGH);
+void MotorBackward()  {
+
+  digitalWrite(rightMotorENB, HIGH);
+  digitalWrite(leftMotorENB, HIGH);
+  analogWrite(rightMotor, 0);
+  analogWrite(leftMotor, 100);
+  //String back = server.arg("backwards");
+  // int motorbackwards = back.toInt();
   delay (2000);
-  digitalWrite(backport,LOW);
-  digitalWrite(sidechanger,LOW);
+  digitalWrite(rightMotorENB,LOW);
+  digitalWrite(leftMotorENB,LOW);
+  analogWrite(leftMotor, 0);
 }
 //----------------------------------------
 //----------------------------------------Setup----------------------------------------
@@ -58,9 +63,17 @@ void setup() {
   pinMode(LEDonBoard, OUTPUT); //--> On Board LED port Direction output
   digitalWrite(LEDonBoard, HIGH); //--> Turn off Led On Board
 
+  pinMode(rightMotor, OUTPUT);
+
+  pinMode(leftMotor, OUTPUT);
+
+  pinMode(rightMotorENB, OUTPUT);
+
+  pinMode(leftMotorENB, OUTPUT);
+
   myservo.attach(ServoPort, 450, 3000); // attach(pin,min,max) PINO, pulso em microsegundos , MAX do pulso
-  pinMode(backport, OUTPUT);  //DEFINIR MOTOR de saida
-  pinMode(sidechanger, OUTPUT); //DEFINIR PORTA DE MUDANCA DE LADO
+
+  
   //----------------------------------------Wait for connection
   Serial.print("Connecting");
   while (WiFi.status() != WL_CONNECTED) {
@@ -83,7 +96,7 @@ void setup() {
   //----------------------------------------Initialize Webserver
   server.on("/", handleRoot);
   server.on("/setPOS", handleServo);
-  server.on("/back", handleMotorbackwards);
+  server.on("/back", MotorBackward);
   server.begin();
 }
 //=====================

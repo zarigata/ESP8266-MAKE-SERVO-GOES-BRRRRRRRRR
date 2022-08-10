@@ -57,17 +57,18 @@ const char MAIN_page[] PROGMEM = R"=====(
   </head>
   <body>
 
-    <h1>NodeMCU ESP8266 / ESP12E Control Servo SG90</h1>
+    <h1>APOLLO EAGLE CAR AuFs3</h1>
     <br><br>
     <div class="slidecontainer">
-      <input type="range" min="0" max="180" value="50" class="slider" id="myRange">
+      <input type="range" min="0" max="150" value="75" class="slider" id="myRange">
       <p>Value : <span id="demo"></span></p>
     </div>
     <div class="button-container">
       <button type="button" class"button" onclick="" >Frente</button>
-      <button type="button" class"button" onclick="back(backwards)">Tras</button>
+      <input type="button" class"button" id="back" onclick="back">Tras</input>
     </div>
      <p> UwU </p>
+     
 
     <script>
       function sendData(pos) {
@@ -89,16 +90,17 @@ const char MAIN_page[] PROGMEM = R"=====(
         sendData(output.innerHTML);
       }
 
-      function back(moveback) {
+      function back() {
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function() {
           if (this.readyState == 4 && this.status == 200) {
             console.log(this.responseText);
           }
         };
-        xhttp.open("GET", "back?backwards="+moveback, true);
+        xhttp.open("GET", "back", true);
         xhttp.send();
       }  
+     
     </script>
 
   </body>
